@@ -54,7 +54,7 @@ export default function Hero() {
                     {/* Left Side Content */}
                     <div className="absolute top-[20%] md:top-[25%] left-6 md:left-12 space-y-2">
                         <h1 className="text-5xl sm:text-6xl md:text-8xl font-semibold tracking-tighter text-white leading-[0.9] drop-shadow-lg max-w-3xl">
-                            Experiencing the <br /> Real "High"
+                            Experiencing the <br /> Real &quot;High&quot;
                         </h1>
                     </div>
 
@@ -64,7 +64,7 @@ export default function Hero() {
                         </h2>
                         <div className="w-12 h-px bg-white/50" />
                         <p className="text-xs sm:text-sm text-off-white/90 leading-relaxed font-medium drop-shadow-md bg-rich-black/40 p-4 rounded-xl backdrop-blur-sm">
-                            From Paramotors to Ultra-Light Aircraft, Action School is bringing world-class sport flying and low-speed aviation to the youth of Kerala. It's time to chase dreams, not distractions.
+                            From Paramotors to Ultra-Light Aircraft, Action School is bringing world-class sport flying and low-speed aviation to the youth of Kerala. It&apos;s time to chase dreams, not distractions.
                         </p>
                     </div>
 
