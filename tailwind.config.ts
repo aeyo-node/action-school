@@ -9,8 +9,12 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        background: "var(--background)",
-        foreground: "var(--foreground)",
+        "aviation-blue": "#0ea5e9",
+        "aviation-navy": "#0f172a",
+        "metallic-gray": "#94a3b8",
+        "rich-black": "#020617",
+        "off-white": "#f8fafc",
+        "dim": "#64748b",
       },
     },
   },
