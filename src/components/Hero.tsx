@@ -18,7 +18,7 @@ export default function Hero() {
     });
 
     const { canvasRef, renderFrame, isLoaded } = useCanvasSequence({
-        folderPath: "/hero-sequence",
+        folderPath: "/action-school/hero-sequence",
         frameCount: 120, // Confirm exact count
     });
 

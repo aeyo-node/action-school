@@ -18,7 +18,7 @@ export default function PlaneMorph() {
     });
 
     const { canvasRef, renderFrame, isLoaded } = useCanvasSequence({
-        folderPath: "/plane-sequence",
+        folderPath: "/action-school/plane-sequence",
         frameCount: 120, // Confirm exact count
     });
 

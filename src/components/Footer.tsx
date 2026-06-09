@@ -23,7 +23,7 @@ export default function Footer() {
                     playsInline
                     className="w-full h-full object-cover grayscale" // Grayscale for dark mode feel
                 >
-                    <source src="/globe.mp4" type="video/mp4" />
+                    <source src="/action-school/globe.mp4" type="video/mp4" />
                 </video>
             </div>
 
