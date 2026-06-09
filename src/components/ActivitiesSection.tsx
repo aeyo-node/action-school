@@ -11,7 +11,7 @@ const activities = [
     },
     {
         title: "Paramotors",
-        description: "The simplest form of powered aviation—fly free like a bird over Kerala&apos;s coastlines.",
+        description: "The simplest form of powered aviation—fly free like a bird over Kerala's coastlines.",
         target: "Adventure Enthusiasts",
         tag: "OPEN AIR"
     },

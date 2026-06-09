@@ -33,7 +33,7 @@ export default function AboutSection() {
                     className="w-full md:w-1/2"
                 >
                     <p className="text-lg leading-relaxed text-dim font-medium">
-                        Based in Thiruvananthapuram, Action School is more than just a flying club—it is a mission to transform the energy of Kerala&apos;s youth. 
+                        Based in Thiruvananthapuram, Action School is more than just a flying club—it is a mission to transform the energy of Kerala's youth. 
                         <br /><br />
                         Today, our youngsters often fall prey to negative influences and drugs simply due to a lack of thrilling, constructive, and futuristic opportunities within the state. We want to change that. By bringing aviation to their doorstep, we provide an adrenaline-pumping, disciplined, and rewarding alternative that opens up global horizons.
                     </p>
