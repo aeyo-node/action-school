@@ -55,7 +55,7 @@ export default function ActivitiesSection() {
                             whileInView={{ opacity: 1, y: 0 }}
                             viewport={{ once: true }}
                             transition={{ delay: index * 0.15 }}
-                            className="bg-rich-black/40 p-10 rounded-2xl backdrop-blur-md border border-white/10 hover:-translate-y-2 transition-all duration-300 group hover:border-aviation-blue/40 hover:shadow-2xl hover:shadow-aviation-blue/10 flex flex-col justify-between"
+                            className="bg-rich-black/40 p-6 md:p-10 rounded-2xl backdrop-blur-md border border-white/10 hover:-translate-y-2 transition-all duration-300 group hover:border-aviation-blue/40 hover:shadow-2xl hover:shadow-aviation-blue/10 flex flex-col justify-between"
                         >
                             <div>
                                 <div className="flex justify-between items-center mb-8">
@@ -63,7 +63,7 @@ export default function ActivitiesSection() {
                                         {item.tag}
                                     </span>
                                 </div>
-                                <h3 className="text-3xl font-medium mb-4 tracking-tight">{item.title}</h3>
+                                <h3 className="text-2xl md:text-3xl font-medium mb-4 tracking-tight">{item.title}</h3>
                                 <p className="text-off-white/80 leading-relaxed mb-12 font-light">
                                     {item.description}
                                 </p>

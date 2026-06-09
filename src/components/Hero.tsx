@@ -27,7 +27,6 @@ export default function Hero() {
     }, [progress, isLoaded, renderFrame]);
 
     // Text Animations
-    // Text fades OUT as we scroll DOWN (entering the window)
     const textOpacity = useTransform(scrollYProgress, [0, 0.15], [1, 0]);
     const textY = useTransform(scrollYProgress, [0, 0.15], [0, -20]);
 
@@ -44,39 +43,48 @@ export default function Hero() {
                 {/* Overlay Content Container */}
                 <motion.div
                     style={{ opacity: textOpacity, y: textY }}
-                    className="absolute inset-0 w-full h-full z-10 pointer-events-none"
+                    className="absolute inset-0 w-full h-full z-10 pointer-events-none flex flex-col justify-between p-6 pb-20 pt-24 md:p-12 md:pb-20 md:pt-28"
                 >
-                    {/* Middle Label */}
-                    <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-center w-full px-4">
-                        <p className="text-white/80 text-base md:text-lg font-light tracking-[0.2em] uppercase mix-blend-overlay drop-shadow-md">Action School</p>
-                    </div>
-
-                    {/* Left Side Content */}
-                    <div className="absolute top-[20%] md:top-[25%] left-6 md:left-12 space-y-2">
-                        <h1 className="text-5xl sm:text-6xl md:text-8xl font-semibold tracking-tighter text-white leading-[0.9] drop-shadow-lg max-w-3xl">
+                    {/* Top: Main Headline */}
+                    <div className="space-y-2">
+                        <h1 className="text-4xl sm:text-5xl md:text-8xl font-semibold tracking-tighter text-white leading-[0.9] drop-shadow-lg max-w-3xl">
                             Experiencing the <br /> Real "High"
                         </h1>
                     </div>
 
-                    <div className="absolute bottom-24 md:bottom-12 left-6 md:left-12 max-w-xs sm:max-w-md space-y-4 md:space-y-6">
-                        <h2 className="text-2xl sm:text-3xl md:text-4xl font-normal tracking-tight text-white leading-tight drop-shadow-md">
-                            Introducing <br className="hidden sm:block" /> Sport Flying <br /> to Kerala.
+                    {/* Bottom: Sub content */}
+                    <div className="space-y-4">
+                        {/* "Action School" center label */}
+                        <p className="text-white/60 text-xs md:text-sm font-light tracking-[0.2em] uppercase drop-shadow-md">Action School</p>
+
+                        <h2 className="text-xl sm:text-2xl md:text-4xl font-normal tracking-tight text-white leading-tight drop-shadow-md">
+                            Introducing Sport Flying <br /> to Kerala.
                         </h2>
                         <div className="w-12 h-px bg-white/50" />
-                        <p className="text-xs sm:text-sm text-off-white/90 leading-relaxed font-medium drop-shadow-md bg-rich-black/40 p-4 rounded-xl backdrop-blur-sm">
+                        <p className="text-xs sm:text-sm text-off-white/90 leading-relaxed font-medium drop-shadow-md bg-rich-black/40 p-3 md:p-4 rounded-xl backdrop-blur-sm max-w-md">
                             From Paramotors to Ultra-Light Aircraft, Action School is bringing world-class sport flying and low-speed aviation to the youth of Kerala. It's time to chase dreams, not distractions.
                         </p>
+
+                        {/* CTA Buttons */}
+                        <div className="flex flex-col sm:flex-row items-start gap-3 pointer-events-auto pt-2">
+                            <a href="#activities" className="w-full sm:w-auto text-center px-6 py-3 rounded-full bg-aviation-blue text-white font-bold text-xs md:text-sm tracking-wide transition-transform hover:scale-105 shadow-lg">
+                                Explore Activities
+                            </a>
+                            <a href="#contact" className="w-full sm:w-auto text-center px-6 py-3 rounded-full bg-white text-aviation-blue font-bold text-xs md:text-sm tracking-wide transition-transform hover:scale-105 shadow-lg">
+                                Join the Movement
+                            </a>
+                        </div>
                     </div>
 
-                    {/* Right Side Content */}
-                    <div className="hidden md:block absolute top-[40%] right-6 md:right-12 text-right">
+                    {/* Right Side Content - Desktop only */}
+                    <div className="hidden md:block absolute top-[40%] right-12 text-right">
                         <h1 className="text-4xl md:text-6xl font-semibold tracking-tighter text-white leading-[0.9] drop-shadow-lg">
                             Action <br /> School
                         </h1>
                     </div>
 
-                    {/* Bottom Right Scroll Indicator */}
-                    <div className="hidden sm:flex absolute bottom-12 right-6 md:right-12 items-center gap-4 text-white drop-shadow-md">
+                    {/* Scroll Indicator - Desktop only */}
+                    <div className="hidden md:flex absolute bottom-12 right-12 items-center gap-4 text-white drop-shadow-md">
                         <div className="flex flex-col items-center gap-1 animate-bounce">
                             <span className="text-[10px] transform rotate-90">»</span>
                         </div>
@@ -84,16 +92,6 @@ export default function Hero() {
                             <span className="text-[10px] font-bold uppercase tracking-widest">Scroll Down</span>
                             <span className="text-[10px] font-bold uppercase tracking-widest text-off-white/80">To Start The Journey</span>
                         </div>
-                    </div>
-
-                    {/* Bottom Center CTA */}
-                    <div className="absolute bottom-6 md:bottom-8 left-1/2 -translate-x-1/2 flex flex-col sm:flex-row items-center gap-3 md:gap-4 pointer-events-auto w-[90%] sm:w-auto">
-                        <a href="#activities" className="w-full sm:w-auto text-center px-6 md:px-8 py-3 rounded-full bg-aviation-blue text-white font-bold text-xs md:text-sm tracking-wide transition-transform hover:scale-105 shadow-lg">
-                            Explore Activities
-                        </a>
-                        <a href="#contact" className="w-full sm:w-auto text-center px-6 md:px-8 py-3 rounded-full bg-white text-aviation-blue font-bold text-xs md:text-sm tracking-wide transition-transform hover:scale-105 shadow-lg">
-                            Join the Movement
-                        </a>
                     </div>
 
                 </motion.div>
