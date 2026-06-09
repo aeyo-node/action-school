@@ -15,7 +15,7 @@ const bullets = [
     },
     {
         title: "Community Validation",
-        desc: "Trusted by frequent flyers and veteran pilots like Mr. Raman, who believe in our vision to transform Kerala's skies.",
+        desc: "Trusted by frequent flyers and veteran pilots like Mr. Raman, who believe in our vision to transform Kerala&apos;s skies.",
         icon: "🤝"
     }
 ];
