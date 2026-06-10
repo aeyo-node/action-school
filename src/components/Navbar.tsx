@@ -7,25 +7,25 @@ export default function Navbar() {
     const [isOpen, setIsOpen] = useState(false);
 
     return (
-        <nav className="fixed top-0 left-0 right-0 z-50 mix-blend-difference pointer-events-auto">
-            <div className="flex items-center justify-between px-6 py-5 md:py-6 md:px-12 text-off-white">
+        <nav className="fixed top-0 left-0 right-0 z-50 pointer-events-auto">
+            <div className="flex items-center justify-between px-6 py-5 md:py-6 md:px-12">
                 {/* Logo */}
-                <div className="text-lg md:text-xl font-bold tracking-tight uppercase">
+                <div className="text-lg md:text-xl font-bold tracking-tight uppercase text-white drop-shadow-lg">
                     <Link href="/">Action School</Link>
                 </div>
 
                 {/* Center Links - Desktop */}
                 <div className="hidden lg:flex gap-6 text-xs md:text-sm font-medium tracking-wide">
-                    <a href="#home" className="hover:text-aviation-blue transition-colors uppercase">Home</a>
-                    <a href="#about" className="hover:text-aviation-blue transition-colors uppercase">About Us</a>
-                    <a href="#activities" className="hover:text-aviation-blue transition-colors uppercase">Activities</a>
-                    <a href="#future" className="hover:text-aviation-blue transition-colors uppercase">The Future</a>
-                    <a href="#contact" className="hover:text-aviation-blue transition-colors uppercase">Contact Us</a>
+                    <a href="#home" className="text-white/80 hover:text-white transition-colors uppercase drop-shadow-md">Home</a>
+                    <a href="#about" className="text-white/80 hover:text-white transition-colors uppercase drop-shadow-md">About Us</a>
+                    <a href="#activities" className="text-white/80 hover:text-white transition-colors uppercase drop-shadow-md">Activities</a>
+                    <a href="#future" className="text-white/80 hover:text-white transition-colors uppercase drop-shadow-md">The Future</a>
+                    <a href="#contact" className="text-white/80 hover:text-white transition-colors uppercase drop-shadow-md">Contact Us</a>
                 </div>
 
                 {/* Right: CTA + Hamburger */}
                 <div className="flex items-center gap-4">
-                    <a href="#contact" className="hidden sm:block px-5 py-2 rounded-full bg-aviation-blue text-white font-bold text-xs tracking-wide transition-transform hover:scale-105 shadow-md shadow-aviation-blue/20">
+                    <a href="#contact" className="hidden sm:block px-5 py-2 rounded-full bg-aviation-blue text-white font-bold text-xs tracking-wide transition-transform hover:scale-105 shadow-lg">
                         Fly With Us
                     </a>
                     {/* Hamburger - Mobile/Tablet */}

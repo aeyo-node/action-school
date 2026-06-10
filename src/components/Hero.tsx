@@ -1,6 +1,6 @@
 "use client";
 
-import { useScroll, useTransform, useMotionValueEvent, motion } from "framer-motion";
+import { useScroll, useTransform, useMotionValueEvent, motion, useSpring } from "framer-motion";
 import { useRef, useState, useEffect } from "react";
 import { useCanvasSequence } from "@/hooks/useCanvasSequence";
 
@@ -11,90 +11,88 @@ export default function Hero() {
         offset: ["start start", "end end"],
     });
 
+    const smoothProgress = useSpring(scrollYProgress, {
+        stiffness: 100,
+        damping: 30,
+        restDelta: 0.001
+    });
+
     const [progress, setProgress] = useState(0);
 
-    useMotionValueEvent(scrollYProgress, "change", (latest) => {
+    useMotionValueEvent(smoothProgress, "change", (latest) => {
         setProgress(latest);
     });
 
     const { canvasRef, renderFrame, isLoaded } = useCanvasSequence({
         folderPath: "/action-school/hero-sequence",
-        frameCount: 120, // Confirm exact count
+        frameCount: 147,
     });
 
     useEffect(() => {
         renderFrame(progress);
     }, [progress, isLoaded, renderFrame]);
 
-    // Text Animations
-    const textOpacity = useTransform(scrollYProgress, [0, 0.15], [1, 0]);
-    const textY = useTransform(scrollYProgress, [0, 0.15], [0, -20]);
+    // Right side content fades out as user scrolls
+    const contentOpacity = useTransform(scrollYProgress, [0, 0.03, 0.15, 0.22], [0, 1, 1, 0]);
+    const contentY = useTransform(scrollYProgress, [0, 0.03], [30, 0]);
+
+    // Scroll indicator
+    const scrollIndicatorOpacity = useTransform(scrollYProgress, [0, 0.02, 0.10, 0.15], [0, 1, 1, 0]);
 
     return (
         <div id="home" ref={containerRef} className="relative h-[300vh] w-full z-0 bg-rich-black">
             <div className="sticky top-0 h-screen w-full overflow-hidden">
 
-                {/* Canvas Background */}
+                {/* Canvas Background - CLEAN, no text over the animation */}
                 <canvas
                     ref={canvasRef}
                     className="absolute inset-0 h-full w-full object-cover"
                 />
 
-                {/* Overlay Content Container */}
+                {/* Subtle vignette for depth */}
+                <div className="absolute inset-0 bg-gradient-to-l from-rich-black/50 via-transparent to-transparent pointer-events-none z-[1]" />
+                <div className="absolute inset-0 bg-gradient-to-t from-rich-black/40 via-transparent to-transparent pointer-events-none z-[1]" />
+
+                {/* Right side: Brand + Buttons ONLY */}
                 <motion.div
-                    style={{ opacity: textOpacity, y: textY }}
-                    className="absolute inset-0 w-full h-full z-10 pointer-events-none flex flex-col justify-between p-6 pb-20 pt-24 md:p-12 md:pb-20 md:pt-28"
+                    style={{ opacity: contentOpacity, y: contentY }}
+                    className="absolute top-1/2 -translate-y-1/2 right-6 md:right-12 z-[3] pointer-events-auto"
                 >
-                    {/* Top: Main Headline */}
-                    <div className="space-y-2">
-                        <h1 className="text-4xl sm:text-5xl md:text-8xl font-semibold tracking-tighter text-white leading-[0.9] drop-shadow-lg max-w-3xl">
-                            Experiencing the <br /> Real "High"
+                    <div className="flex flex-col items-end space-y-6">
+                        {/* Brand name */}
+                        <h1 className="text-4xl sm:text-5xl md:text-6xl xl:text-7xl font-bold tracking-tighter text-white leading-[0.85] text-right drop-shadow-2xl">
+                            Action<br />School
                         </h1>
-                    </div>
 
-                    {/* Bottom: Sub content */}
-                    <div className="space-y-4">
-                        {/* "Action School" center label */}
-                        <p className="text-white/60 text-xs md:text-sm font-light tracking-[0.2em] uppercase drop-shadow-md">Action School</p>
+                        {/* Thin divider */}
+                        <div className="w-16 h-px bg-white/30" />
 
-                        <h2 className="text-xl sm:text-2xl md:text-4xl font-normal tracking-tight text-white leading-tight drop-shadow-md">
-                            Introducing Sport Flying <br /> to Kerala.
-                        </h2>
-                        <div className="w-12 h-px bg-white/50" />
-                        <p className="text-xs sm:text-sm text-off-white/90 leading-relaxed font-medium drop-shadow-md bg-rich-black/40 p-3 md:p-4 rounded-xl backdrop-blur-sm max-w-md">
-                            From Paramotors to Ultra-Light Aircraft, Action School is bringing world-class sport flying and low-speed aviation to the youth of Kerala. It's time to chase dreams, not distractions.
+                        {/* Tagline */}
+                        <p className="text-[10px] sm:text-xs text-white/60 font-medium tracking-[0.3em] uppercase text-right">
+                            Sport Flying in Kerala
                         </p>
 
-                        {/* CTA Buttons */}
-                        <div className="flex flex-col sm:flex-row items-start gap-3 pointer-events-auto pt-2">
-                            <a href="#activities" className="w-full sm:w-auto text-center px-6 py-3 rounded-full bg-aviation-blue text-white font-bold text-xs md:text-sm tracking-wide transition-transform hover:scale-105 shadow-lg">
+                        {/* Buttons stacked */}
+                        <div className="flex flex-col gap-3 items-end">
+                            <a href="#activities" className="px-6 sm:px-8 py-2.5 sm:py-3 rounded-full bg-white text-rich-black font-bold text-[11px] sm:text-xs tracking-wide transition-all hover:scale-105 hover:shadow-xl shadow-lg text-center w-full sm:w-auto">
                                 Explore Activities
                             </a>
-                            <a href="#contact" className="w-full sm:w-auto text-center px-6 py-3 rounded-full bg-white text-aviation-blue font-bold text-xs md:text-sm tracking-wide transition-transform hover:scale-105 shadow-lg">
-                                Join the Movement
+                            <a href="#contact" className="px-6 sm:px-8 py-2.5 sm:py-3 rounded-full bg-white/10 backdrop-blur-md text-white font-bold text-[11px] sm:text-xs tracking-wide border border-white/20 transition-all hover:bg-white/20 hover:scale-105 text-center w-full sm:w-auto">
+                                Contact Us
                             </a>
                         </div>
                     </div>
-
-                    {/* Right Side Content - Desktop only */}
-                    <div className="hidden md:block absolute top-[40%] right-12 text-right">
-                        <h1 className="text-4xl md:text-6xl font-semibold tracking-tighter text-white leading-[0.9] drop-shadow-lg">
-                            Action <br /> School
-                        </h1>
-                    </div>
-
-                    {/* Scroll Indicator - Desktop only */}
-                    <div className="hidden md:flex absolute bottom-12 right-12 items-center gap-4 text-white drop-shadow-md">
-                        <div className="flex flex-col items-center gap-1 animate-bounce">
-                            <span className="text-[10px] transform rotate-90">»</span>
-                        </div>
-                        <div className="flex flex-col text-right">
-                            <span className="text-[10px] font-bold uppercase tracking-widest">Scroll Down</span>
-                            <span className="text-[10px] font-bold uppercase tracking-widest text-off-white/80">To Start The Journey</span>
-                        </div>
-                    </div>
-
                 </motion.div>
+
+                {/* Scroll indicator - bottom center, desktop only */}
+                <motion.div
+                    style={{ opacity: scrollIndicatorOpacity }}
+                    className="absolute bottom-6 left-1/2 -translate-x-1/2 z-[3] pointer-events-none hidden md:flex flex-col items-center gap-2"
+                >
+                    <div className="w-px h-8 bg-gradient-to-b from-transparent to-white/60 animate-pulse" />
+                    <span className="text-[9px] font-bold uppercase tracking-[0.3em] text-white/50">Scroll</span>
+                </motion.div>
+
             </div>
         </div>
     );

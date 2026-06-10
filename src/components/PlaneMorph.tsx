@@ -1,6 +1,6 @@
 "use client";
 
-import { useScroll, useTransform, useMotionValueEvent, motion } from "framer-motion";
+import { useScroll, useTransform, useMotionValueEvent, motion, useSpring } from "framer-motion";
 import { useRef, useState, useEffect } from "react";
 import { useCanvasSequence } from "@/hooks/useCanvasSequence";
 
@@ -11,25 +11,45 @@ export default function PlaneMorph() {
         offset: ["start end", "end end"],
     });
 
+    const smoothProgress = useSpring(scrollYProgress, {
+        stiffness: 100,
+        damping: 30,
+        restDelta: 0.001
+    });
+
     const [progress, setProgress] = useState(0);
 
-    useMotionValueEvent(scrollYProgress, "change", (latest) => {
+    useMotionValueEvent(smoothProgress, "change", (latest) => {
         setProgress(latest);
     });
 
     const { canvasRef, renderFrame, isLoaded } = useCanvasSequence({
         folderPath: "/action-school/plane-sequence",
-        frameCount: 120, // Confirm exact count
+        frameCount: 240,
     });
 
     useEffect(() => {
         renderFrame(progress);
     }, [progress, isLoaded, renderFrame]);
 
-    // --- Animations ---
-    const opacityLuxury = useTransform(scrollYProgress, [0.1, 0.2, 0.4, 0.5], [0, 1, 1, 0]);
-    const scaleLuxury = useTransform(scrollYProgress, [0.1, 0.5], [0.9, 1]);
-    const opacitySpecs = useTransform(scrollYProgress, [0.55, 0.65, 0.9, 1], [0, 1, 1, 0]);
+    // --- Cinematic Phase Choreography ---
+
+    // Phase 1: "Fly in Freedom" (10%-45% of scroll)
+    const p1TitleOpacity = useTransform(scrollYProgress, [0.08, 0.14, 0.38, 0.45], [0, 1, 1, 0]);
+    const p1TitleScale = useTransform(scrollYProgress, [0.08, 0.20], [0.92, 1]);
+    const p1SubOpacity = useTransform(scrollYProgress, [0.14, 0.20, 0.35, 0.42], [0, 1, 1, 0]);
+    const p1SubY = useTransform(scrollYProgress, [0.14, 0.20], [20, 0]);
+    const p1CardOpacity = useTransform(scrollYProgress, [0.18, 0.24, 0.38, 0.44], [0, 1, 1, 0]);
+    const p1CardY = useTransform(scrollYProgress, [0.18, 0.24], [30, 0]);
+
+    // Phase 2: Specs (55%-95% of scroll)
+    const p2HeaderOpacity = useTransform(scrollYProgress, [0.52, 0.58, 0.88, 0.95], [0, 1, 1, 0]);
+    const p2HeaderY = useTransform(scrollYProgress, [0.52, 0.58], [40, 0]);
+    const p2DescOpacity = useTransform(scrollYProgress, [0.56, 0.62, 0.85, 0.92], [0, 1, 1, 0]);
+    const p2DescY = useTransform(scrollYProgress, [0.56, 0.62], [30, 0]);
+    const p2SpecsOpacity = useTransform(scrollYProgress, [0.60, 0.66, 0.88, 0.94], [0, 1, 1, 0]);
+    const p2SpecsY = useTransform(scrollYProgress, [0.60, 0.66], [20, 0]);
+    const p2CtaOpacity = useTransform(scrollYProgress, [0.64, 0.70, 0.90, 0.96], [0, 1, 1, 0]);
 
     return (
         <div id="plane-morph" ref={containerRef} className="relative h-[400vh] w-full z-20 bg-rich-black">
@@ -41,93 +61,113 @@ export default function PlaneMorph() {
                     className="absolute inset-0 h-full w-full object-cover mix-blend-screen opacity-80" 
                 />
 
-                {/* PHASE 1: Fly In Freedom - Use flex layout instead of absolute chaos */}
+                {/* Cinematic overlays */}
+                <div className="absolute inset-0 bg-gradient-to-t from-rich-black/60 via-transparent to-rich-black/20 pointer-events-none z-[1]" />
+
+                {/* ===== PHASE 1: Fly In Freedom ===== */}
+
+                {/* Big headline - right aligned */}
                 <motion.div
-                    style={{ opacity: opacityLuxury, scale: scaleLuxury }}
-                    className="absolute inset-0 w-full h-full flex flex-col justify-between pointer-events-none p-6 pt-20 pb-8 md:p-12 md:pt-24 md:pb-12"
+                    style={{ opacity: p1TitleOpacity, scale: p1TitleScale }}
+                    className="absolute top-1/3 right-6 md:right-12 z-[2] pointer-events-none text-right"
                 >
-                    {/* Top: Big headline */}
-                    <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center w-full gap-2">
-                        <h2 className="text-[13vw] sm:text-[15vw] leading-none font-semibold tracking-tighter text-white drop-shadow-md">Fly in</h2>
-                        <h2 className="text-[13vw] sm:text-[15vw] leading-none font-semibold tracking-tighter text-white drop-shadow-md">Freedom</h2>
+                    <div className="px-4">
+                        <h2 className="text-[12vw] sm:text-[10vw] md:text-[8vw] leading-[0.85] font-bold tracking-tighter text-white drop-shadow-2xl">
+                            Fly in<br />Freedom
+                        </h2>
                     </div>
+                </motion.div>
 
-                    {/* Middle: Subtext */}
-                    <div className="max-w-xs">
-                        <h3 className="text-xl md:text-3xl font-medium tracking-tight text-white leading-tight drop-shadow-md">
-                            Adventure <br /> that moves <br /> you
-                        </h3>
-                    </div>
+                {/* Subtext - bottom left */}
+                <motion.div
+                    style={{ opacity: p1SubOpacity, y: p1SubY }}
+                    className="absolute bottom-[28%] sm:bottom-[25%] left-6 md:left-12 z-[3] pointer-events-none"
+                >
+                    <h3 className="text-lg sm:text-xl md:text-2xl font-light tracking-tight text-white/90 leading-snug">
+                        Adventure<br />that moves you
+                    </h3>
+                </motion.div>
 
-                    {/* Bottom: Description card */}
-                    <div className="self-end max-w-sm bg-rich-black/60 backdrop-blur-md p-4 md:p-6 rounded-xl border border-white/10">
-                        <div className="flex justify-between text-[10px] font-bold uppercase tracking-widest text-aviation-blue mb-2">
+                {/* Description card - bottom right */}
+                <motion.div
+                    style={{ opacity: p1CardOpacity, y: p1CardY }}
+                    className="absolute bottom-6 sm:bottom-8 right-6 md:right-12 left-6 sm:left-auto z-[3] pointer-events-none max-w-sm"
+                >
+                    <div className="bg-white/5 backdrop-blur-xl p-4 md:p-5 rounded-xl border border-white/10">
+                        <div className="flex justify-between text-[9px] font-bold uppercase tracking-[0.2em] text-white/50 mb-2">
                             <span>Featured</span>
                             <span>Ultra-Light</span>
                         </div>
-                        <p className="text-xs text-white/90 leading-relaxed">
-                            Experience the thrill of piloting a real, lightweight airplane under expert supervision. Designed for maximum visibility and pure joy, our ultra-light aircraft bring the sky closer to you.
+                        <p className="text-[11px] sm:text-xs text-white/80 leading-relaxed">
+                            Experience the thrill of piloting a real, lightweight airplane under expert supervision. Designed for maximum visibility and pure joy.
                         </p>
                     </div>
                 </motion.div>
 
 
-                {/* PHASE 2: Specs - Also flex-based */}
+                {/* ===== PHASE 2: Specs ===== */}
+
+                {/* Header - top left */}
                 <motion.div
-                    style={{ opacity: opacitySpecs }}
-                    className="absolute inset-0 w-full h-full flex flex-col justify-between pointer-events-none p-6 pt-20 pb-8 md:p-12 md:pt-24 md:pb-12"
+                    style={{ opacity: p2HeaderOpacity, y: p2HeaderY }}
+                    className="absolute top-20 sm:top-24 left-6 md:left-12 z-[3] pointer-events-none max-w-[90%]"
                 >
-                    {/* Top row: Title + description side by side on desktop, stacked on mobile */}
-                    <div className="flex flex-col md:flex-row md:justify-between md:items-start gap-4 md:gap-8">
-                        <div className="drop-shadow-md">
-                            <p className="text-sm md:text-xl text-off-white/80 font-medium mb-0">Action School</p>
-                            <h2 className="text-[12vw] md:text-[8vw] font-bold tracking-tighter text-white leading-[0.8]">Ultra-Light</h2>
-                        </div>
+                    <p className="text-[10px] sm:text-xs text-white/50 font-medium tracking-[0.3em] uppercase mb-1">Action School</p>
+                    <h2 className="text-[11vw] sm:text-[9vw] md:text-[7vw] font-bold tracking-tighter text-white leading-[0.8] drop-shadow-2xl">
+                        Ultra-Light
+                    </h2>
+                </motion.div>
 
-                        <div className="max-w-sm bg-rich-black/40 p-4 md:p-6 rounded-xl backdrop-blur-sm">
-                            <h3 className="text-xl md:text-3xl font-medium tracking-tight text-white leading-none mb-3 md:mb-6">
-                                Master the Skies
-                            </h3>
-                            <div className="w-12 h-px bg-white/20 mb-3 md:mb-6" />
-                            <p className="text-[10px] font-bold uppercase tracking-widest text-aviation-blue mb-2">Direct Access to Open Skies</p>
-                            <p className="text-xs text-white/90 leading-relaxed">
-                                Fast, agile, and incredibly safe. Whether you are an aspiring pilot or an adventure enthusiast, our fleet is ready to deliver an unforgettable experience.
-                            </p>
+                {/* Description card - top right on desktop, below title on mobile */}
+                <motion.div
+                    style={{ opacity: p2DescOpacity, y: p2DescY }}
+                    className="absolute top-[40%] sm:top-24 right-6 md:right-12 left-6 sm:left-auto z-[3] pointer-events-none max-w-[calc(100%-3rem)] sm:max-w-xs md:max-w-sm"
+                >
+                    <div className="bg-white/5 backdrop-blur-xl p-4 md:p-5 rounded-xl border border-white/10">
+                        <h3 className="text-lg sm:text-xl md:text-2xl font-medium tracking-tight text-white leading-none mb-3">
+                            Master the Skies
+                        </h3>
+                        <div className="w-10 h-px bg-white/20 mb-3" />
+                        <p className="text-[9px] font-bold uppercase tracking-[0.2em] text-white/40 mb-1.5">Direct Access to Open Skies</p>
+                        <p className="text-[11px] sm:text-xs text-white/80 leading-relaxed">
+                            Fast, agile, and incredibly safe. Whether you are an aspiring pilot or an adventure enthusiast, our fleet is ready.
+                        </p>
+                    </div>
+                </motion.div>
+
+                {/* Specs grid - bottom left */}
+                <motion.div
+                    style={{ opacity: p2SpecsOpacity, y: p2SpecsY }}
+                    className="absolute bottom-20 sm:bottom-16 md:bottom-12 left-6 md:left-12 right-6 sm:right-auto z-[3] pointer-events-none"
+                >
+                    <div className="grid grid-cols-2 gap-x-6 gap-y-3 sm:gap-x-10 sm:gap-y-5 bg-white/5 backdrop-blur-xl p-4 sm:p-6 rounded-xl border border-white/10 max-w-md">
+                        <div>
+                            <p className="text-[8px] sm:text-[9px] font-bold uppercase tracking-[0.2em] text-white/40 mb-0.5">Experience</p>
+                            <p className="text-xs sm:text-base font-bold text-white">EXPERT LED</p>
+                        </div>
+                        <div>
+                            <p className="text-[8px] sm:text-[9px] font-bold uppercase tracking-[0.2em] text-white/40 mb-0.5">Views</p>
+                            <p className="text-xs sm:text-base font-bold text-white">360° PANORAMIC</p>
+                        </div>
+                        <div>
+                            <p className="text-[8px] sm:text-[9px] font-bold uppercase tracking-[0.2em] text-white/40 mb-0.5">Requirements</p>
+                            <p className="text-xs sm:text-base font-bold text-white">NO EXPERIENCE</p>
+                        </div>
+                        <div>
+                            <p className="text-[8px] sm:text-[9px] font-bold uppercase tracking-[0.2em] text-white/40 mb-0.5">Safety</p>
+                            <p className="text-xs sm:text-base font-bold text-white">100% SECURE</p>
                         </div>
                     </div>
+                </motion.div>
 
-                    {/* Bottom: Specs grid + CTA */}
-                    <div className="flex flex-col gap-4">
-                        <div className="grid grid-cols-2 gap-x-6 gap-y-3 md:gap-x-12 md:gap-y-6 text-white bg-rich-black/60 p-4 md:p-8 rounded-xl backdrop-blur-md border border-white/10 max-w-lg">
-                            <div>
-                                <p className="text-[8px] md:text-[10px] font-bold uppercase tracking-widest text-aviation-blue mb-1">Experience</p>
-                                <p className="text-xs md:text-xl font-bold">EXPERT LED</p>
-                            </div>
-                            <div>
-                                <p className="text-[8px] md:text-[10px] font-bold uppercase tracking-widest text-aviation-blue mb-1">Views</p>
-                                <p className="text-xs md:text-xl font-bold">360° PANORAMIC</p>
-                            </div>
-                            <div>
-                                <p className="text-[8px] md:text-[10px] font-bold uppercase tracking-widest text-aviation-blue mb-1">Requirements</p>
-                                <p className="text-xs md:text-xl font-bold">NO EXPERIENCE</p>
-                            </div>
-                            <div>
-                                <p className="text-[8px] md:text-[10px] font-bold uppercase tracking-widest text-aviation-blue mb-1">Safety</p>
-                                <p className="text-xs md:text-xl font-bold">100% SECURE</p>
-                            </div>
-                        </div>
-
-                        {/* CTA */}
-                        <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3 pointer-events-auto">
-                            <a href="#contact" className="w-full sm:w-auto text-center px-6 py-3 rounded-full bg-aviation-blue text-white font-bold text-xs md:text-sm tracking-wide shadow-lg shadow-aviation-blue/20 hover:scale-105 transition-transform">
-                                Join the Movement
-                            </a>
-                            <div className="hidden md:flex w-12 h-12 rounded-full bg-white shadow-lg items-center justify-center text-aviation-blue text-xl hover:scale-110 transition-transform cursor-pointer">
-                                ✈️
-                            </div>
-                        </div>
-                    </div>
-
+                {/* CTA - bottom right */}
+                <motion.div
+                    style={{ opacity: p2CtaOpacity }}
+                    className="absolute bottom-6 sm:bottom-8 right-6 md:right-12 z-[4] pointer-events-auto"
+                >
+                    <a href="#contact" className="inline-block px-6 sm:px-8 py-3 rounded-full bg-white text-rich-black font-bold text-[11px] sm:text-xs tracking-wide shadow-xl transition-all hover:scale-105 hover:shadow-2xl">
+                        Join the Movement
+                    </a>
                 </motion.div>
 
             </div>

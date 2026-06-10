@@ -7,4 +7,36 @@
   body {
     @apply bg-rich-black text-off-white antialiased;
   }
+
+  /* Smooth scrolling for anchor links */
+  html {
+    scroll-behavior: smooth;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  /* Hide scrollbar but keep functionality */
+  ::-webkit-scrollbar {
+    width: 4px;
+  }
+  ::-webkit-scrollbar-track {
+    background: #020617;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: #0ea5e9;
+    border-radius: 2px;
+  }
+
+  /* Selection color */
+  ::selection {
+    background-color: rgba(14, 165, 233, 0.3);
+    color: #f8fafc;
+  }
+}
+
+@layer utilities {
+  /* Text shadow for cinematic text over video */
+  .text-shadow-cinematic {
+    text-shadow: 0 2px 20px rgba(0, 0, 0, 0.5), 0 0 40px rgba(0, 0, 0, 0.3);
+  }
 }
