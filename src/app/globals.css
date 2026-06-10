@@ -1,11 +1,18 @@
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;700;900&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
+:root {
+  --font-display: 'Outfit', sans-serif;
+  --font-body: 'Plus Jakarta Sans', sans-serif;
+}
 
 @layer base {
   body {
-    @apply bg-rich-black text-off-white antialiased;
+    @apply bg-brand-cream text-brand-charcoal antialiased;
+    font-family: var(--font-body);
   }
 
   /* Smooth scrolling for anchor links */
@@ -17,20 +24,20 @@
 
   /* Hide scrollbar but keep functionality */
   ::-webkit-scrollbar {
-    width: 4px;
+    width: 0px;
+    height: 0px;
   }
   ::-webkit-scrollbar-track {
-    background: #020617;
+    background: transparent;
   }
   ::-webkit-scrollbar-thumb {
-    background: #0ea5e9;
-    border-radius: 2px;
+    background: transparent;
   }
 
-  /* Selection color */
+  /* Selection color matching Jesko Jets selection style */
   ::selection {
-    background-color: rgba(14, 165, 233, 0.3);
-    color: #f8fafc;
+    background-color: var(--_colors---base-1000--100, #312726);
+    color: var(--_colors---base-0--100, #ffffff);
   }
 }
 
@@ -39,4 +46,14 @@
   .text-shadow-cinematic {
     text-shadow: 0 2px 20px rgba(0, 0, 0, 0.5), 0 0 40px rgba(0, 0, 0, 0.3);
   }
+
+  /* Jesko Jets Gradients */
+  .dark-bg {
+    background: linear-gradient(180deg, #312726 0%, #2D2423 11.79%, #292120 21.38%, #251E1D 29.12%, #211A1A 35.34%, #1D1716 40.37%, #181313 44.56%, #141010 48.24%, #100D0C 51.76%, #0C0A0A 55.44%, #090707 59.63%, #060505 64.66%, #030303 70.88%, #020101 78.62%, #000 88.21%, #000 100%);
+  }
+
+  .light-bg {
+    background: linear-gradient(180deg, #7A716E 0%, #FFF8ED 100%);
+  }
 }
+

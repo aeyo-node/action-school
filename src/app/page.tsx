@@ -2,7 +2,7 @@ import Hero from "@/components/Hero";
 import PlaneMorph from "@/components/PlaneMorph";
 import AboutSection from "@/components/AboutSection";
 import ActivitiesSection from "@/components/ActivitiesSection";
-import EcosystemSection from "@/components/EcosystemSection";
+import AdvantagesSection from "@/components/AdvantagesSection";
 import FutureSection from "@/components/FutureSection";
 import Footer from "@/components/Footer";
 
@@ -14,9 +14,11 @@ export default function Home() {
       <PlaneMorph />
       <AboutSection />
       <ActivitiesSection />
-      <EcosystemSection />
+      <AdvantagesSection />
       <FutureSection />
       <Footer />
     </main>
   );
 }
+
+

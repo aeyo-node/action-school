@@ -15,26 +15,104 @@ export function useCanvasSequence({ folderPath, frameCount, filePrefix = "ezgif-
   const lastFrameRef = useRef(-1);
   const rafRef = useRef<number | null>(null);
 
-  // Preload images progressively
+  // Preload images progressively in batches to prevent network and main-thread congestion
   useEffect(() => {
     const imgs: HTMLImageElement[] = [];
     const pad = (num: number) => num.toString().padStart(3, "0");
 
-    // Load first frame immediately
-    const firstImg = new Image();
-    firstImg.src = `${folderPath}/${filePrefix}${pad(1)}.jpg`;
-    firstImg.onload = () => {
-      setFirstFrameLoaded(true);
-    };
-    imgs.push(firstImg);
-
-    // Load the rest of the frames in the background
-    for (let i = 2; i <= frameCount; i++) {
+    // Initialize all image objects empty (without src) to pre-allocate
+    for (let i = 1; i <= frameCount; i++) {
       const img = new Image();
-      img.src = `${folderPath}/${filePrefix}${pad(i)}.jpg`;
       imgs.push(img);
     }
     imagesRef.current = imgs;
+
+    // Load first frame immediately for instant visual
+    const firstImg = imgs[0];
+    firstImg.src = `${folderPath}/${filePrefix}${pad(1)}.jpg`;
+    firstImg.onload = () => {
+      setFirstFrameLoaded(true);
+
+      // 1. Sparse load: Load every 8th frame first to quickly cover the whole scroll range
+      const sparseIndices: number[] = [];
+      for (let i = 1; i <= frameCount; i += 8) {
+        if (i !== 1) sparseIndices.push(i);
+      }
+
+      let sparsePtr = 0;
+      const loadNextSparseBatch = () => {
+        if (sparsePtr >= sparseIndices.length) {
+          loadRemainingFrames();
+          return;
+        }
+
+        const batchSize = 4;
+        const promises = [];
+        for (let b = 0; b < batchSize && sparsePtr < sparseIndices.length; b++) {
+          const idx = sparseIndices[sparsePtr++];
+          const img = imgs[idx - 1];
+          img.src = `${folderPath}/${filePrefix}${pad(idx)}.jpg`;
+          promises.push(
+            new Promise<void>((resolve) => {
+              img.onload = () => resolve();
+              img.onerror = () => resolve();
+            })
+          );
+        }
+
+        Promise.all(promises).then(() => {
+          // Yield to main thread
+          setTimeout(loadNextSparseBatch, 16);
+        });
+      };
+
+      // 2. Load all other remaining frames in small batches
+      const loadRemainingFrames = () => {
+        const remainingIndices: number[] = [];
+        for (let i = 1; i <= frameCount; i++) {
+          if (!imgs[i - 1].src) {
+            remainingIndices.push(i);
+          }
+        }
+
+        let remPtr = 0;
+        const loadNextBatch = () => {
+          if (remPtr >= remainingIndices.length) return;
+
+          const batchSize = 6;
+          const promises = [];
+          for (let b = 0; b < batchSize && remPtr < remainingIndices.length; b++) {
+            const idx = remainingIndices[remPtr++];
+            const img = imgs[idx - 1];
+            img.src = `${folderPath}/${filePrefix}${pad(idx)}.jpg`;
+            promises.push(
+              new Promise<void>((resolve) => {
+                img.onload = () => resolve();
+                img.onerror = () => resolve();
+              })
+            );
+          }
+
+          Promise.all(promises).then(() => {
+            if (typeof window !== "undefined" && "requestIdleCallback" in window) {
+              window.requestIdleCallback(() => loadNextBatch());
+            } else {
+              setTimeout(loadNextBatch, 30);
+            }
+          });
+        };
+
+        loadNextBatch();
+      };
+
+      // Trigger the sparse queue
+      loadNextSparseBatch();
+    };
+
+    return () => {
+      // Cleanup: stop setting src on unmount if possible (by clearing references or callbacks)
+      imagesRef.current = [];
+    };
   }, [folderPath, frameCount, filePrefix]);
 
   // Draw frame based on progress (0 to 1)
@@ -132,4 +210,5 @@ export function useCanvasSequence({ folderPath, frameCount, filePrefix = "ezgif-
 
   return { canvasRef, renderFrame, isLoaded: firstFrameLoaded };
 }
+
 

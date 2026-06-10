@@ -52,7 +52,7 @@ export default function PlaneMorph() {
     const p2CtaOpacity = useTransform(scrollYProgress, [0.64, 0.70, 0.90, 0.96], [0, 1, 1, 0]);
 
     return (
-        <div id="plane-morph" ref={containerRef} className="relative h-[400vh] w-full z-20 bg-rich-black">
+        <div id="plane-morph" ref={containerRef} className="relative h-[400vh] w-full z-20 bg-brand-charcoal">
             <div className="sticky top-0 h-screen w-full overflow-hidden">
 
                 {/* Canvas */}
@@ -62,14 +62,14 @@ export default function PlaneMorph() {
                 />
 
                 {/* Cinematic overlays */}
-                <div className="absolute inset-0 bg-gradient-to-t from-rich-black/60 via-transparent to-rich-black/20 pointer-events-none z-[1]" />
+                <div className="absolute inset-0 bg-gradient-to-t from-brand-charcoal/60 via-transparent to-brand-charcoal/20 pointer-events-none z-[1]" />
 
                 {/* ===== PHASE 1: Fly In Freedom ===== */}
 
                 {/* Big headline - right aligned, resized for mobile to prevent animation overlap */}
                 <motion.div
                     style={{ opacity: p1TitleOpacity, scale: p1TitleScale }}
-                    className="absolute top-[35%] right-4 sm:right-6 md:right-12 z-[2] pointer-events-none text-right"
+                    className="absolute top-[30%] right-4 sm:right-6 md:right-12 z-[2] pointer-events-none text-right"
                 >
                     <div className="px-2 sm:px-4">
                         <h2 className="text-[10vw] sm:text-[8vw] md:text-[6vw] leading-[0.85] font-bold tracking-tighter text-white drop-shadow-2xl">
@@ -88,10 +88,10 @@ export default function PlaneMorph() {
                     </h3>
                 </motion.div>
 
-                {/* Description card - bottom right */}
+                {/* Description card - bottom right (matches desktop placement exactly) */}
                 <motion.div
                     style={{ opacity: p1CardOpacity, y: p1CardY }}
-                    className="absolute bottom-6 sm:bottom-8 left-4 right-4 sm:left-auto sm:right-6 md:right-12 z-[3] pointer-events-none max-w-sm"
+                    className="absolute bottom-6 sm:bottom-8 right-4 sm:right-6 md:right-12 z-[3] pointer-events-none max-w-[280px] sm:max-w-sm"
                 >
                     <div className="bg-rich-black/35 backdrop-blur-md border border-white/10 p-4 sm:p-5 rounded-xl">
                         <div className="flex justify-between text-[9px] font-bold uppercase tracking-[0.2em] text-white/50 mb-2">
@@ -118,10 +118,10 @@ export default function PlaneMorph() {
                     </h2>
                 </motion.div>
 
-                {/* Description card - top right on desktop, below title on mobile */}
+                {/* Description card - top right (matches desktop placement exactly) */}
                 <motion.div
                     style={{ opacity: p2DescOpacity, y: p2DescY }}
-                    className="absolute top-[40%] sm:top-24 right-4 sm:right-6 md:right-12 left-4 sm:left-auto z-[3] pointer-events-none max-w-xs md:max-w-sm"
+                    className="absolute top-[28%] right-4 sm:right-6 md:right-12 z-[3] pointer-events-none max-w-[280px] sm:max-w-xs md:max-w-sm"
                 >
                     <div className="bg-rich-black/35 backdrop-blur-md border border-white/10 p-4 sm:p-5 rounded-xl">
                         <h3 className="text-base sm:text-lg md:text-xl font-medium tracking-tight text-white leading-none mb-3">
@@ -135,12 +135,12 @@ export default function PlaneMorph() {
                     </div>
                 </motion.div>
 
-                {/* Specs grid - bottom left */}
+                {/* Specs grid - bottom left (matches desktop placement exactly) */}
                 <motion.div
                     style={{ opacity: p2SpecsOpacity, y: p2SpecsY }}
-                    className="absolute bottom-20 sm:bottom-16 md:bottom-12 left-4 sm:left-6 md:left-12 right-4 sm:right-auto z-[3] pointer-events-none"
+                    className="absolute bottom-20 sm:bottom-16 md:bottom-12 left-4 sm:left-6 md:left-12 z-[3] pointer-events-none max-w-[280px] sm:max-w-md"
                 >
-                    <div className="grid grid-cols-2 gap-x-6 gap-y-3 sm:gap-x-10 sm:gap-y-5 bg-rich-black/35 backdrop-blur-md border border-white/10 p-4 sm:p-6 rounded-xl max-w-md">
+                    <div className="grid grid-cols-2 gap-x-6 gap-y-3 sm:gap-x-10 sm:gap-y-5 bg-rich-black/35 backdrop-blur-md border border-white/10 p-4 sm:p-6 rounded-xl">
                         <div>
                             <p className="text-[8px] sm:text-[9px] font-bold uppercase tracking-[0.2em] text-white/40 mb-0.5">Experience</p>
                             <p className="text-xs sm:text-sm md:text-base font-bold text-white">EXPERT LED</p>
