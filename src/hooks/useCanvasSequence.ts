@@ -11,32 +11,27 @@ interface UseCanvasSequenceProps {
 export function useCanvasSequence({ folderPath, frameCount, filePrefix = "ezgif-frame-" }: UseCanvasSequenceProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const imagesRef = useRef<HTMLImageElement[]>([]);
-  const [isLoaded, setIsLoaded] = useState(false);
+  const [firstFrameLoaded, setFirstFrameLoaded] = useState(false);
   const lastFrameRef = useRef(-1);
   const rafRef = useRef<number | null>(null);
 
-  // Preload images
+  // Preload images progressively
   useEffect(() => {
-    let loadedCount = 0;
     const imgs: HTMLImageElement[] = [];
-
     const pad = (num: number) => num.toString().padStart(3, "0");
 
-    for (let i = 1; i <= frameCount; i++) {
+    // Load first frame immediately
+    const firstImg = new Image();
+    firstImg.src = `${folderPath}/${filePrefix}${pad(1)}.jpg`;
+    firstImg.onload = () => {
+      setFirstFrameLoaded(true);
+    };
+    imgs.push(firstImg);
+
+    // Load the rest of the frames in the background
+    for (let i = 2; i <= frameCount; i++) {
       const img = new Image();
       img.src = `${folderPath}/${filePrefix}${pad(i)}.jpg`;
-      img.onload = () => {
-        loadedCount++;
-        if (loadedCount === frameCount) {
-          setIsLoaded(true);
-        }
-      };
-      img.onerror = () => {
-        loadedCount++;
-        if (loadedCount === frameCount) {
-          setIsLoaded(true);
-        }
-      };
       imgs.push(img);
     }
     imagesRef.current = imgs;
@@ -52,17 +47,34 @@ export function useCanvasSequence({ folderPath, frameCount, filePrefix = "ezgif-
     if (!ctx) return;
 
     const safeProgress = Math.max(0, Math.min(1, progress));
-    const frameIndex = Math.min(
+    const targetFrameIndex = Math.min(
       Math.floor(safeProgress * (frameCount - 1)),
       frameCount - 1
     );
+
+    // Find the closest loaded frame to targetFrameIndex
+    let frameIndex = -1;
+    for (let offset = 0; offset < frameCount; offset++) {
+      const backward = targetFrameIndex - offset;
+      const forward = targetFrameIndex + offset;
+      
+      if (backward >= 0 && images[backward] && images[backward].complete && images[backward].naturalWidth > 0) {
+        frameIndex = backward;
+        break;
+      }
+      if (forward < frameCount && images[forward] && images[forward].complete && images[forward].naturalWidth > 0) {
+        frameIndex = forward;
+        break;
+      }
+    }
+
+    if (frameIndex === -1) return;
 
     // Skip if same frame
     if (frameIndex === lastFrameRef.current) return;
     lastFrameRef.current = frameIndex;
 
     const img = images[frameIndex];
-    if (!img || !img.complete || img.naturalWidth === 0) return;
 
     // Cancel any pending render
     if (rafRef.current) cancelAnimationFrame(rafRef.current);
@@ -108,7 +120,6 @@ export function useCanvasSequence({ folderPath, frameCount, filePrefix = "ezgif-
         canvasRef.current.height = window.innerHeight * dpr;
         canvasRef.current.style.width = window.innerWidth + "px";
         canvasRef.current.style.height = window.innerHeight + "px";
-        // Force re-render
         lastFrameRef.current = -1;
       }
     };
@@ -119,5 +130,6 @@ export function useCanvasSequence({ folderPath, frameCount, filePrefix = "ezgif-
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  return { canvasRef, renderFrame, isLoaded };
+  return { canvasRef, renderFrame, isLoaded: firstFrameLoaded };
 }
+

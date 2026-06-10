@@ -12,9 +12,9 @@ export default function Hero() {
     });
 
     const smoothProgress = useSpring(scrollYProgress, {
-        stiffness: 100,
-        damping: 30,
-        restDelta: 0.001
+        stiffness: 300,
+        damping: 35,
+        restDelta: 0.0001
     });
 
     const [progress, setProgress] = useState(0);
@@ -32,12 +32,12 @@ export default function Hero() {
         renderFrame(progress);
     }, [progress, isLoaded, renderFrame]);
 
-    // Right side content fades out as user scrolls
-    const contentOpacity = useTransform(scrollYProgress, [0, 0.03, 0.15, 0.22], [0, 1, 1, 0]);
-    const contentY = useTransform(scrollYProgress, [0, 0.03], [30, 0]);
+    // Right side content is fully visible at start (scroll 0) and fades out near the end of Hero (scroll 0.15-0.22)
+    const contentOpacity = useTransform(scrollYProgress, [0, 0.15, 0.22], [1, 1, 0]);
+    const contentY = useTransform(scrollYProgress, [0, 0.15], [0, -20]);
 
     // Scroll indicator
-    const scrollIndicatorOpacity = useTransform(scrollYProgress, [0, 0.02, 0.10, 0.15], [0, 1, 1, 0]);
+    const scrollIndicatorOpacity = useTransform(scrollYProgress, [0, 0.10], [1, 0]);
 
     return (
         <div id="home" ref={containerRef} className="relative h-[300vh] w-full z-0 bg-rich-black">
@@ -53,12 +53,12 @@ export default function Hero() {
                 <div className="absolute inset-0 bg-gradient-to-l from-rich-black/50 via-transparent to-transparent pointer-events-none z-[1]" />
                 <div className="absolute inset-0 bg-gradient-to-t from-rich-black/40 via-transparent to-transparent pointer-events-none z-[1]" />
 
-                {/* Right side: Brand + Buttons ONLY */}
+                {/* Right side: Brand, Taglines + Buttons */}
                 <motion.div
                     style={{ opacity: contentOpacity, y: contentY }}
-                    className="absolute top-1/2 -translate-y-1/2 right-6 md:right-12 z-[3] pointer-events-auto"
+                    className="absolute top-[55%] sm:top-1/2 -translate-y-1/2 right-4 sm:right-6 md:right-12 z-[3] pointer-events-auto max-w-[90%] sm:max-w-md bg-rich-black/35 backdrop-blur-md border border-white/10 md:border-none md:bg-transparent md:backdrop-blur-none p-5 sm:p-6 md:p-0 rounded-2xl"
                 >
-                    <div className="flex flex-col items-end space-y-6">
+                    <div className="flex flex-col items-end space-y-4 sm:space-y-6">
                         {/* Brand name */}
                         <h1 className="text-4xl sm:text-5xl md:text-6xl xl:text-7xl font-bold tracking-tighter text-white leading-[0.85] text-right drop-shadow-2xl">
                             Action<br />School
@@ -67,13 +67,18 @@ export default function Hero() {
                         {/* Thin divider */}
                         <div className="w-16 h-px bg-white/30" />
 
+                        {/* Custom Tagline Requested by User */}
+                        <p className="text-xs sm:text-sm md:text-base text-white/90 text-right leading-relaxed font-light drop-shadow-md">
+                            Experiencing the Real &ldquo;High&rdquo; &ndash; Introducing Sport Flying to Kerala.
+                        </p>
+
                         {/* Tagline */}
-                        <p className="text-[10px] sm:text-xs text-white/60 font-medium tracking-[0.3em] uppercase text-right">
+                        <p className="text-[9px] sm:text-[10px] text-white/50 font-semibold tracking-[0.3em] uppercase text-right">
                             Sport Flying in Kerala
                         </p>
 
                         {/* Buttons stacked */}
-                        <div className="flex flex-col gap-3 items-end">
+                        <div className="flex flex-col gap-3 items-end w-full sm:w-auto">
                             <a href="#activities" className="px-6 sm:px-8 py-2.5 sm:py-3 rounded-full bg-white text-rich-black font-bold text-[11px] sm:text-xs tracking-wide transition-all hover:scale-105 hover:shadow-xl shadow-lg text-center w-full sm:w-auto">
                                 Explore Activities
                             </a>
